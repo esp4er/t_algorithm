@@ -1,3 +1,7 @@
+SELECT count(column_name) as numbers
+FROM cols
+WHERE table_name LIKE 'DAT%'
+
 set SERVEROUTPUT ON;
 Declare 
 v_value number (10,2);
