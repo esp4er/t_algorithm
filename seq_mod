@@ -1,0 +1,15 @@
+SELECT * FROM user_sequences WHERE sequence_name = 'dane_seq';
+SELECT dane_seq.nextval FROM dual;
+ALTER SEQUENCE dane_seq INCREMENT BY -1;
+SELECT column_name
+FROM cols
+WHERE table_name LIKE 'DAN%'
+AND COLUMN_ID=
+  (SELECT counter FROM pom
+  );
+SELECT COUNT(wynik),
+  *
+FROM v_data11
+WHERE wynik IS NOT NULL
+GROUP BY wynik
+ORDER BY DESC;
