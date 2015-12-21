@@ -1,18 +1,18 @@
 SET SERVEROUTPUT ON;
 DECLARE
-  v_value  NUMBER NOT NULL :=0;
+  col_num  NUMBER NOT NULL :=0;
   counting NUMBER NOT NULL :=0;
   ncolumn  VARCHAR2(20);
-  rowno    NUMBER NOT NULL :=0;
+  row_num  NUMBER NOT NULL :=0;
   rowcount NUMBER NOT NULL :=0;
 BEGIN
   SELECT COUNT(column_name) AS numbers
-  INTO v_value
+  INTO col_num
   FROM cols
   WHERE table_name LIKE 'DAN%';
   UPDATE pom SET counter = 0;
-  SELECT MAX(ROWNUM) INTO rowno FROM dane;
-  DBMS_OUTPUT.PUT_LINE('Bla ' || rowcount || rowno);
+  SELECT MAX(ROWNUM) INTO row_num FROM dane;
+  DBMS_OUTPUT.PUT_LINE('Bla ' || rowcount || row_num);
   LOOP
     UPDATE pom SET counter = counter+1;
     SELECT column_name
@@ -24,18 +24,25 @@ BEGIN
       );
     counting:=counting+1;
     rowcount:=1;
-    DBMS_OUTPUT.PUT_LINE('Hello ' || counting);
-    DBMS_OUTPUT.PUT_LINE('Hello ' || ncolumn);
+    --DBMS_OUTPUT.PUT_LINE('Hello ' || counting);
+    --DBMS_OUTPUT.PUT_LINE('Hello ' || ncolumn);
+    --Druga pętla tworząca widoki z danymi
     LOOP
-      EXECUTE immediate 'CREATE OR REPLACE VIEW v_data'||rowcount||''||counting||'
+      EXECUTE immediate 'CREATE OR REPLACE VIEW v_data'||rowcount||''||counting||' 
 AS  
-SELECT * from dane where '||ncolumn||'=(select '||ncolumn||' from dane where id='||rowcount||')';-- and '||ncolumn||'='||counting||')';
+SELECT * from dane where '||ncolumn||'=(select '||ncolumn||' from dane where id='||rowcount||')';
+      SELECT COUNT(wynik) AS freq,
+        wynik
+      FROM
+        (SELECT view_name FROM user_views WHERE view_name=v_data11
+        )
+      GROUP BY wynik;
       rowcount:=rowcount+1;
       EXIT
-    WHEN rowcount=rowno+1;
+    WHEN rowcount=row_num+1;
     END LOOP;
     EXIT
-  WHEN counting=v_value-2;
+  WHEN counting=col_num-2;
   END LOOP;
 EXCEPTION
 WHEN no_data_found THEN
