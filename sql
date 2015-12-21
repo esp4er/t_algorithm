@@ -11,6 +11,8 @@ BEGIN
   FROM cols
   WHERE table_name LIKE 'DAN%';
   UPDATE pom SET counter = 0;
+  SELECT MAX(ROWNUM) INTO rowno FROM dane;
+  DBMS_OUTPUT.PUT_LINE('Bla ' || rowcount || rowno);
   LOOP
     UPDATE pom SET counter = counter+1;
     SELECT column_name
@@ -22,12 +24,10 @@ BEGIN
       );
     counting:=counting+1;
     rowcount:=1;
-    --DBMS_OUTPUT.PUT_LINE('Hello ' || counting);
-    --DBMS_OUTPUT.PUT_LINE('Hello ' || ncolumn);
+    DBMS_OUTPUT.PUT_LINE('Hello ' || counting);
+    DBMS_OUTPUT.PUT_LINE('Hello ' || ncolumn);
     LOOP
-      SELECT MAX(ROWNUM) INTO rowno FROM dane;
-      DBMS_OUTPUT.PUT_LINE('Bla ' || rowcount || rowno);
-      EXECUTE immediate 'CREATE OR REPLACE VIEW v_data'||counting||''||rowcount||' 
+      EXECUTE immediate 'CREATE OR REPLACE VIEW v_data'||rowcount||''||counting||'
 AS  
 SELECT * from dane where '||ncolumn||'=(select '||ncolumn||' from dane where id='||rowcount||')';-- and '||ncolumn||'='||counting||')';
       rowcount:=rowcount+1;
@@ -35,18 +35,13 @@ SELECT * from dane where '||ncolumn||'=(select '||ncolumn||' from dane where id=
     WHEN rowcount=rowno+1;
     END LOOP;
     EXIT
-  WHEN counting=v_value-1;
+  WHEN counting=v_value-2;
   END LOOP;
 EXCEPTION
 WHEN no_data_found THEN
   dbms_output.put_line('Table NOT found');
 END;
 /
---SELECT *
---FROM dane
---WHERE atr=
---  (SELECT atr FROM dane WHERE rownum=1 AND atr=1
---  )
 --  begin
 --        for i in (select view_name from user_views) loop
 --          execute immediate 'drop view ' || i.view_name;
