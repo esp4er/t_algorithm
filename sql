@@ -11,7 +11,6 @@ BEGIN
   FROM cols
   WHERE table_name LIKE 'DAN%';
   UPDATE pom SET counter = 0;
-  --  Select dane.*, c.column_id from user_tab_columns c inner JOIN dane on dane.ATR=c.column_name;
   LOOP
     UPDATE pom SET counter = counter+1;
     SELECT column_name
@@ -30,7 +29,7 @@ BEGIN
       DBMS_OUTPUT.PUT_LINE('Bla ' || rowcount || rowno);
       EXECUTE immediate 'CREATE OR REPLACE VIEW v_data'||counting||''||rowcount||' 
 AS  
-SELECT * from dane where '||ncolumn||'=(select'||ncolumn||'from dane where rownum='||rowcount||'and'||ncolumn||'='||counting||')';
+SELECT * from dane where '||ncolumn||'=(select '||ncolumn||' from dane where id='||rowcount||')';-- and '||ncolumn||'='||counting||')';
       rowcount:=rowcount+1;
       EXIT
     WHEN rowcount=rowno+1;
@@ -42,7 +41,7 @@ EXCEPTION
 WHEN no_data_found THEN
   dbms_output.put_line('Table NOT found');
 END;
-       /
+/
 --SELECT *
 --FROM dane
 --WHERE atr=
