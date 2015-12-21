@@ -24,9 +24,9 @@ BEGIN
     counting:=counting+1;
     DBMS_OUTPUT.PUT_LINE('Hello ' || counting);
     DBMS_OUTPUT.PUT_LINE('Hello ' || ncolumn);
-    EXECUTE immediate 'CREATE OR REPLACE VIEW v_data
+    EXECUTE immediate 'CREATE OR REPLACE VIEW v_data'||counting||'
 AS  
-SELECT * from dane where '||ncolumn||'=ATR';
+SELECT * from dane where '||ncolumn||'='||counting||'';
     EXIT
   WHEN counting=v_value;
   END LOOP;
