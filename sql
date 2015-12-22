@@ -1,3 +1,12 @@
+BEGIN
+  FOR i IN
+  (SELECT view_name FROM user_views
+  )
+  LOOP
+    EXECUTE immediate 'drop view ' || i.view_name;
+  END LOOP;
+END;
+/
 SET SERVEROUTPUT ON;
 DECLARE
   col_num  NUMBER NOT NULL :=0;
@@ -31,12 +40,6 @@ BEGIN
       EXECUTE immediate 'CREATE OR REPLACE VIEW v_data'||rowcount||''||counting||' 
 AS  
 SELECT * from dane where '||ncolumn||'=(select '||ncolumn||' from dane where id='||rowcount||')';
-      SELECT COUNT(wynik) AS freq,
-        wynik
-      FROM
-        (SELECT view_name FROM user_views WHERE view_name=v_data11
-        )
-      GROUP BY wynik;
       rowcount:=rowcount+1;
       EXIT
     WHEN rowcount=row_num+1;
@@ -49,8 +52,3 @@ WHEN no_data_found THEN
   dbms_output.put_line('Table NOT found');
 END;
 /
---  begin
---        for i in (select view_name from user_views) loop
---          execute immediate 'drop view ' || i.view_name;
---        end loop;
---      end;
