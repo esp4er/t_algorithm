@@ -1,3 +1,4 @@
+--Usuwanie wszystkich widoków
 BEGIN
   FOR i IN
   (SELECT view_name FROM user_views
@@ -20,6 +21,7 @@ BEGIN
   FROM cols
   WHERE table_name LIKE 'DAN%';
   UPDATE pom SET counter = 0;
+  UPDATE pom SET OBJECT_COUNT=0;
   SELECT MAX(ROWNUM) INTO row_num FROM dane;
   DBMS_OUTPUT.PUT_LINE('Bla ' || rowcount || row_num);
   LOOP
@@ -37,6 +39,7 @@ BEGIN
     --DBMS_OUTPUT.PUT_LINE('Hello ' || ncolumn);
     --Druga pętla tworząca widoki z danymi
     LOOP
+      UPDATE pom SET OBJECT_COUNT=OBJECT_COUNT+1;
       EXECUTE immediate 'CREATE OR REPLACE VIEW v_data'||rowcount||''||counting||' 
 AS  
 SELECT * from dane where '||ncolumn||'=(select '||ncolumn||' from dane where id='||rowcount||')';
@@ -47,6 +50,7 @@ SELECT * from dane where '||ncolumn||'=(select '||ncolumn||' from dane where id=
     EXIT
   WHEN counting=col_num-2;
   END LOOP;
+  UPDATE pom set OBJECT_COUNT=OBJECT_COUNT/COUNTER;
 EXCEPTION
 WHEN no_data_found THEN
   dbms_output.put_line('Table NOT found');
