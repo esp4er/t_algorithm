@@ -1,3 +1,6 @@
+CREATE OR REPLACE VIEW v_name
+AS
+  SELECT view_name, rownum AS id FROM user_views WHERE view_name LIKE '%DATA%'; 
 DROP TABLE temp;
 DROP TRIGGER TEMP_ID;
 DROP SEQUENCE temp_seq;
@@ -37,6 +40,3 @@ FROM '||v_names||'';
 END;
 /
 CREATE OR REPLACE VIEW v_temp as SELECT a.*, d.VIEW_NAME FROM temp a, v_name d where a.id=d.id;
-CREATE OR REPLACE VIEW v_name
-AS
-  SELECT view_name, rownum AS id FROM user_views WHERE view_name LIKE '%DATA%'; 
