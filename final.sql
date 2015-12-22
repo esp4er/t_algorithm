@@ -1,15 +1,17 @@
 DECLARE
   view_name VARCHAR(20);
-BEGIN
+  counts NUMBER; 
+  ob_count NUMBER;
+BEGIN 
+  select counter into counts, object_counter into ob_count from 
   LOOP
-  EXIT WHEN
+  EXIT WHEN view_name;
   END LOOP;
 END;
 /
 
 select maximum-czest
-from v_temp 
-
+from v_temp;
 --CASE
 --    WHEN grade = 'A' THEN DBMS_OUTPUT.PUT_LINE('Excellent');
 --    WHEN grade = 'B' THEN DBMS_OUTPUT.PUT_LINE('Very Good');
