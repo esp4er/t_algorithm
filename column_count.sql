@@ -7,9 +7,9 @@ AS
   DROP SEQUENCE temp_seq;
   CREATE TABLE temp
     (
-      ID      NUMBER DEFAULT 0 NOT NULL ENABLE,
-      CZEST   NUMBER,
-      MAXIMUM NUMBER,
+      ID        NUMBER DEFAULT 0 NOT NULL ENABLE,
+      CZEST     NUMBER,
+      MAXIMUM   NUMBER,
       VIEW_NAME VARCHAR2(50),
       CONSTRAINT "TEMP_ID_PK" PRIMARY KEY ("ID")
     );
@@ -35,13 +35,14 @@ SELECT MAX(
 COUNT((SELECT COUNT(wynik) FROM '||v_names|| '      
 )) AS maximum      
 FROM '||v_names||'';
-execute IMMEDIATE 'update temp set VIEW_NAME = (SELECT VIEW_NAME FROM v_name where id='||counting||')where id='||counting||'';
+      EXECUTE IMMEDIATE 'update temp set VIEW_NAME = (SELECT VIEW_NAME FROM v_name where id='||counting||')where id='||counting||'';
+      EXECUTE IMMEDIATE '';
+      --execute IMMEDIATE 'CREATE OR REPLACE VIEW v_temp
+      --AS
+      --  SELECT a.CZEST, a.ID, a.MAXIMUM, d.VIEW_NAME FROM temp a, v_name d WHERE a.id=d.id';
       counting:=counting+1;
       EXIT
     WHEN counting=v_id+1;
     END LOOP;
   END;
   /
-CREATE OR REPLACE VIEW v_temp
-AS
-  SELECT a.CZEST, a.ID, a.MAXIMUM, d.VIEW_NAME FROM temp a, v_name d WHERE a.id=d.id;
